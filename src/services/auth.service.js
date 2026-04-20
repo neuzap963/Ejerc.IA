@@ -7,6 +7,7 @@ export async function registerService(userData) {
   try {
     const { name, email, password } = userData;
 
+    // validação
     if (!name || !email || !password) {
       return {
         status: 400,
@@ -14,6 +15,7 @@ export async function registerService(userData) {
       };
     }
 
+    // verificar se já existe
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
@@ -23,6 +25,7 @@ export async function registerService(userData) {
       };
     }
 
+    // hash password
     const hashedpass = await bcrypt.hash(password, saltRounds);
 
     const newUser = new userModel({
@@ -43,10 +46,9 @@ export async function registerService(userData) {
       },
     };
   } catch (error) {
-    console.log(error);
     return {
-      status: 409,
-      message: 'Usuário não foi guardado',
+      status: 500,
+      message: 'Erro interno no servidor',
     };
   }
 }
