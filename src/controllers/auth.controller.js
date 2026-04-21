@@ -1,17 +1,17 @@
-import { registerService } from '../services/auth.service.js';
-
+import { registerService, loginService } from '../services/auth.service.js';
+import { userInfoService } from '../services/auth.service.js';
 export async function registerController(req, res) {
-  try {
-    const result = await registerService(req.body);
+  const result = await registerService(req.body);
+  return res.status(result.status).json(result);
+}
 
-    return res.status(result.status).json({
-      message: result.message,
-      user: result.user,
-    });
+export async function loginController(req, res) {
+  const result = await loginService(req.body);
+  return res.status(result.status).json(result);
+}
 
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
+export async function getUserInfoController(req, res) {
+  const result = await userInfoService(req.userId);
+
+  return res.status(result.status).json(result);
 }
